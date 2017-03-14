@@ -9,6 +9,8 @@ import org.htmlparser.filters.NodeClassFilter;
 import org.htmlparser.tags.LinkTag;
 import org.htmlparser.util.*;
 
+import services.SearchService;
+
 /**
  *
  * @author Madalin Ilie
@@ -23,6 +25,12 @@ public class LinkFinderAction extends RecursiveAction {
     private static final long t0 = System.nanoTime();
 
     public LinkFinderAction(String url, LinkHandler cr) {
+    	int hashIndex = url.indexOf("#");
+    	if (hashIndex != -1)
+    	{
+    		url = url.substring(0, hashIndex);
+    	}
+    	
         this.url = url;
         this.cr = cr;
     }
@@ -48,10 +56,13 @@ public class LinkFinderAction extends RecursiveAction {
                 }
                 cr.addVisited(url);
 
-                if (cr.size() == 1500) {
-                    System.out.println("Time for visit 1500 distinct links= " + (System.nanoTime() - t0));                   
+                if (cr.size() == 100) {
+                    System.out.println("Time for visit 100 distinct links= " + (System.nanoTime() - t0));                   
                 }
 
+                SearchService ss = new SearchService(url);
+                ss.run();
+                
                 //invoke recursively
                 invokeAll(actions);
             } catch (Exception e) {

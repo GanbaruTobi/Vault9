@@ -44,7 +44,7 @@ public class WebCrawler implements LinkHandler {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws Exception {
-        new WebCrawler("http://www.javaworld.com", 64).startCrawling();
+        new WebCrawler("https://wikileaks.org/ciav7p1/cms/index.html", 64).startCrawling();
     }
 
 }

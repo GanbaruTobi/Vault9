@@ -7,7 +7,7 @@ public class RelationRepository extends BaseRepository {
 
 	public boolean addRelation_owns(int ownerId, int pageId) {
 		try(Connection con = getConnection()){
-			String qry = "INSERT IGNORE INTO ownes(page, user) VALUES (" + ownerId + ", " + pageId + ");";
+			String qry = "INSERT IGNORE INTO ownes(page, user) VALUES (" + pageId + ", " + ownerId + ");";
 			System.out.println(qry);
 			con.createStatement().executeQuery(qry);
 			return true;
