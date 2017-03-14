@@ -18,7 +18,8 @@ public class Statup {
 		//startUrl
 //		String url = "https://wikileaks.org/ciav7p1/cms/page_9535828.html";
 //		String url = "https://wikileaks.org/ciav7p1/cms/page_15728902.html";
-		String url = "https://wikileaks.org/ciav7p1/cms/page_9535552.html";
+//		String url = "https://wikileaks.org/ciav7p1/cms/page_9535552.html";
+		String url = "https://wikileaks.org/ciav7p1/cms/page_15729053.html";
 
 		//getServices
 		WebService ws = new WebService();
@@ -40,11 +41,27 @@ public class Statup {
 		String titleString = title.toString().replaceAll("<h2>", "").replaceAll("</h2>", "");
 		
 		//number of links
+		int latestVersion = 1;
 		int numberOfLinks = 0;
 		Elements links = doc.select("a[href]");
 		numberOfLinks = 0;
 		for (Element element : links) {
+			String check = element.toString();
+			if(check.contains(">Latest version</a>")){
+				latestVersion = 0;
+			}
+			if(check.contains("#") || check.contains("tails.boum.org") || check.contains("www.couragefound.org") 
+					|| check.contains("bitcoin") || check.contains("www.torproject.org") || 
+					check.contains("leaks-menu-item") || check.contains("news-menu-item") || 
+					check.contains("about-menu-item") || check.contains("partners-menu-item") || 
+					check.contains("button-face") || check.contains("href=\"../index.html\"") || 
+					check.contains("<a href=\"index.html\">") || check.contains("our.wikileaks.org") || 
+					check.contains("www.facebook.com/wikileaks") || check.contains("twitter.com/wikileaks") || 
+					check.contains("div class=\"teaser\"") || check.contains("efm-permalink")){
+				continue;
+			}
 			numberOfLinks++;
+			System.out.println("Link: " + element.toString());
 		}
 		
 		//number of attachments
@@ -79,7 +96,7 @@ public class Statup {
 
 		
 		//create the page
-		Page page = new Page(titleString, docAsString, owner, numberOfLinks, numberOfAttachments, numberOfPrevVersions);
+		Page page = new Page(titleString, docAsString, owner, numberOfLinks, numberOfAttachments, numberOfPrevVersions, url, latestVersion);
 		
 		
 		//add to DB
