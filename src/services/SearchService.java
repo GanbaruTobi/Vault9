@@ -52,18 +52,20 @@ public class SearchService implements Runnable {
 						if(check.contains(">Latest version</a>")){
 							latestVersion = 0;
 						}
-						
+						boolean doCount = true;	
 						
 						for (String string : Utilities.ignoredStrings) {
-							String a = string;
+							String a = string.toLowerCase();
 							String b = check.toLowerCase();
 							//what??
 							if(check.contains(string.toLowerCase()))
-								continue;
+								doCount = false;
 						}
 						
+						if(doCount)
+							numberOfLinks++;
 						
-						numberOfLinks++;
+						
 						System.out.println("Link: " + element.toString());
 					}
 					
