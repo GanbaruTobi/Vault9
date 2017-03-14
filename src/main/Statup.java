@@ -17,7 +17,8 @@ public class Statup {
 		
 		//startUrl
 //		String url = "https://wikileaks.org/ciav7p1/cms/page_9535828.html";
-		String url = "https://wikileaks.org/ciav7p1/cms/page_15728902.html";
+//		String url = "https://wikileaks.org/ciav7p1/cms/page_15728902.html";
+		String url = "https://wikileaks.org/ciav7p1/cms/page_9535552.html";
 
 		//getServices
 		WebService ws = new WebService();
@@ -32,7 +33,7 @@ public class Statup {
 		//owner
 		int indexOfOwnerName = docAsString.indexOf("Owner: ");
 		String name = docAsString.substring(indexOfOwnerName, indexOfOwnerName + 20);
-		String owner = name.replaceAll("[^0-9]+", " ");
+		String owner = name.replaceAll("[^0-9]+", "");
 		
 		//title
 		Element title = doc.select("h2").get(0);
@@ -66,10 +67,16 @@ public class Statup {
 			String[] ary = prevVersions.nextElementSibling().toString().split("\\|");
 			numberOfPrevVersions = ary.length - 2;
 		}catch (Exception e){
-			
+			try{
+				int indexOfPrevVersions = docAsString.indexOf("Previous versions:");
+				String prevVersions = docAsString.substring(indexOfPrevVersions, indexOfPrevVersions + 200);
+				String[] ary = prevVersions.split("\\|");
+				numberOfPrevVersions = ary.length - 2;
+			}catch(Exception f){
+				
+			}
 		}
-		
-		
+
 		
 		//create the page
 		Page page = new Page(titleString, docAsString, owner, numberOfLinks, numberOfAttachments, numberOfPrevVersions);
@@ -77,7 +84,7 @@ public class Statup {
 		
 		//add to DB
 		boolean success = dbs.addPageWithOwner(page, owner);
-		
+		System.out.println("Erfolgreich: " + success);
 
 
 	}
