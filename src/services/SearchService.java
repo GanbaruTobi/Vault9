@@ -2,6 +2,7 @@ package services;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -47,13 +48,18 @@ public class SearchService implements Runnable {
 					Elements links = doc.select("a[href]");
 					numberOfLinks = 0;
 					for (Element element : links) {
-						String check = element.toString();
+						String check = element.toString().toLowerCase();
 						if(check.contains(">Latest version</a>")){
 							latestVersion = 0;
 						}
 						
-						if(Arrays.asList(Utilities.ignoredStrings).contains(check)){
-							continue;
+						
+						for (String string : Utilities.ignoredStrings) {
+							String a = string;
+							String b = check.toLowerCase();
+							//what??
+							if(check.contains(string.toLowerCase()))
+								continue;
 						}
 						
 						
