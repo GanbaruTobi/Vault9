@@ -30,7 +30,7 @@ public class SearchService implements Runnable {
 				
 				//transform
 				String docAsString = doc.text();
-					
+				String dochAsHtml = doc.html();
 		
 				try {
 					//owner
@@ -45,29 +45,33 @@ public class SearchService implements Runnable {
 					//number of links
 					int latestVersion = 1;
 					int numberOfLinks = 0;
-					Elements links = doc.select("a[href]");
-					numberOfLinks = 0;
-					for (Element element : links) {
-						String check = element.toString().toLowerCase();
-						if(check.contains(">Latest version</a>")){
-							latestVersion = 0;
-						}
-						boolean doCount = true;	
-						
-						for (String string : Utilities.ignoredStrings) {
-							String a = string.toLowerCase();
-							String b = check.toLowerCase();
-							//what??
-							if(check.contains(string.toLowerCase()))
-								doCount = false;
-						}
-						
-						if(doCount)
-							numberOfLinks++;
-						
-						
-						System.out.println("Link: " + element.toString());
+//					Elements links = doc.select("a[href]");
+//					numberOfLinks = 0;
+//					for (Element element : links) {
+//						String check = element.toString().toLowerCase();
+//						if(!check.contains(">Latest version</a>")){
+//							latestVersion = 1;
+//						}
+//						boolean doCount = true;	
+//						
+//						for (String string : Utilities.ignoredStrings) {
+//							String a = string.toLowerCase();
+//							String b = check.toLowerCase();
+//							if(check.contains(string.toLowerCase()))
+//								doCount = false;
+//						}
+//						
+//						if(doCount)
+//							numberOfLinks++;
+//						
+//						
+//						System.out.println("Link: " + element.toString());
+//					}
+					
+					if(dochAsHtml.contains(">Latest version</a>")){
+						latestVersion = 0;
 					}
+					
 					
 					//number of attachments
 					Element attachmentsString = doc.select("h3").get(4);
@@ -80,25 +84,17 @@ public class SearchService implements Runnable {
 
 					
 					//number of previous Versions
-					int numberOfPrevVersions = 0;		
+					int numberOfPrevVersions = 0;
 					try{
-						Element prevVersions = doc.select("h3").get(5);
-						if(!prevVersions.toString().contains("Previous")){
-							prevVersions = doc.select("h3").get(6);
-						}
-						String[] ary = prevVersions.nextElementSibling().toString().split("\\|");
+						int indexOfPrevVersions = docAsString.indexOf("Previous versions:");
+						String prevVersions = docAsString.substring(indexOfPrevVersions, indexOfPrevVersions + 200);
+						String[] ary = prevVersions.split("\\|");
 						numberOfPrevVersions = ary.length - 2;
-					}catch (Exception e){
-						try{
-							int indexOfPrevVersions = docAsString.indexOf("Previous versions:");
-							String prevVersions = docAsString.substring(indexOfPrevVersions, indexOfPrevVersions + 200);
-							String[] ary = prevVersions.split("\\|");
-							numberOfPrevVersions = ary.length - 2;
-						}catch(Exception f){
-							
-						}
+					}catch(Exception e){
+						
 					}
 
+					
 					
 					//create the page
 					Page page = new Page(titleString, docAsString, owner, numberOfLinks, numberOfAttachments, numberOfPrevVersions, url, latestVersion);
@@ -107,7 +103,7 @@ public class SearchService implements Runnable {
 					//add to DB
 					boolean success = dbs.addPageWithOwner(page, owner);
 				} catch (Exception e) {
-					System.out.println("This is no page: " + url);
+					System.out.println("This is no right page: " + url);
 				}
 	}
 

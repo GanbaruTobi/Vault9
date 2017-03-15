@@ -45,21 +45,24 @@ public class LinkFinderAction extends RecursiveAction {
                 Parser parser = new Parser(uriLink.openConnection());
                 NodeList list = parser.extractAllNodesThatMatch(new NodeClassFilter(LinkTag.class));
 
+                
                 for (int i = 0; i < list.size(); i++) {
                     LinkTag extracted = (LinkTag) list.elementAt(i);
 
                     if (!extracted.extractLink().isEmpty()
-                            && !cr.visited(extracted.extractLink())) {
+                            && !cr.visited(extracted.extractLink()) && extracted.extractLink().contains("wikileaks.org")) {
+                    	String a = extracted.extractLink();
 
                         actions.add(new LinkFinderAction(extracted.extractLink(), cr));
                     }
                 }
                 cr.addVisited(url);
 
-                if (cr.size() == 100) {
-                    System.out.println("Time for visit 100 distinct links= " + (System.nanoTime() - t0));                   
+                if (cr.size() == 1000) {
+                    System.out.println("Time for visit 100 distinct links= " + (System.nanoTime() - t0));  
+                    System.exit(0);
                 }
-
+                
                 SearchService ss = new SearchService(url);
                 ss.run();
                 
